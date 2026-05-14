@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error 404 - Eurolift</title>
+    <!-- Matter.js for Physics -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/styles.css">
+    
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #f5f5f7;
+            font-family: 'Inter', sans-serif;
+        }
+
+        #physics-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .physics-element {
+            position: absolute;
+            background: #fff;
+            padding: 15px 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            white-space: nowrap;
+            border: 1px solid rgba(0,0,0,0.05);
+            will-change: transform;
+            font-size: 1rem;
+        }
+
+        .title-404 {
+            font-size: clamp(3rem, 12vw, 6rem);
+            font-weight: 900;
+            color: var(--primary-blue);
+        }
+
+        @media (max-width: 768px) {
+            .physics-element {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="physics-container">
+        <!-- Logo with Physics -->
+        <div id="logo-box" class="physics-element">
+            <img src="assets/img/logo.png" alt="Eurolift Logo" style="height: 50px;">
+        </div>
+
+        <div id="box1" class="physics-element title-404">Error 404</div>
+        <div id="box2" class="physics-element subtitle">Página no encontrada</div>
+        <div id="box3" class="physics-element message">Parece que el ascensor se detuvo entre pisos</div>
+        <a href="index.html" id="box4" class="physics-element btn-home">VOLVER AL INICIO</a>
+    </div>
+
+    <div id="matter-canvas"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
+    <script>
+        const { Engine, Runner, Bodies, Composite, Mouse, MouseConstraint, Events } = Matter;
+
+        const engine = Engine.create();
+        const world = engine.world;
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+
+        // Walls
+        const wallThickness = 100;
+        const ground = Bodies.rectangle(width / 2, height + wallThickness / 2, width, wallThickness, { isStatic: true });
+        const leftWall = Bodies.rectangle(-wallThickness / 2, height / 2, wallThickness, height, { isStatic: true });
+        const rightWall = Bodies.rectangle(width + wallThickness / 2, height / 2, wallThickness, height, { isStatic: true });
+        const ceiling = Bodies.rectangle(width / 2, -wallThickness / 2, width, wallThickness, { isStatic: true });
+
+        Composite.add(world, [ground, leftWall, rightWall, ceiling]);
+
+        // Bodies for DOM elements
+        const elementsData = [
+            { id: 'logo-box', x: width * 0.5, y: height * 0.1 },
+            { id: 'box1', x: width * 0.5, y: height * 0.3 },
+            { id: 'box2', x: width * 0.5, y: height * 0.45 },
+            { id: 'box3', x: width * 0.5, y: height * 0.55 },
+            { id: 'box4', x: width * 0.5, y: height * 0.7 }
+        ];
+
+        const elementBodies = elementsData.map(data => {
+            const el = document.getElementById(data.id);
+            const rect = el.getBoundingClientRect();
+            const body = Bodies.rectangle(data.x, data.y, rect.width, rect.height, {
+                restitution: 0.5,
+                friction: 0.1
+            });
+            body.domEl = el;
+            return body;
+        });
+
+        Composite.add(world, elementBodies);
+
+        // Mouse Constraint
+        const mouse = Mouse.create(document.body);
+        const mouseConstraint = MouseConstraint.create(engine, {
+            mouse: mouse,
+            constraint: {
+                stiffness: 0.2,
+                render: { visible: false }
+            }
+        });
+
+        Composite.add(world, mouseConstraint);
+
+        // Forced Redirect Handler
+        document.getElementById('box4').addEventListener('click', function(e) {
+            window.location.href = 'index.html';
+        });
+
+        // Sync Loop
+        Events.on(engine, 'afterUpdate', () => {
+            elementBodies.forEach(body => {
+                const { x, y } = body.position;
+                const angle = body.angle;
+                body.domEl.style.transform = `translate(${x - body.domEl.offsetWidth / 2}px, ${y - body.domEl.offsetHeight / 2}px) rotate(${angle}rad)`;
+            });
+        });
+
+        const runner = Runner.create();
+        Runner.run(runner, engine);
+
+        // Initial spin
+        elementBodies.forEach(body => {
+            Matter.Body.setAngularVelocity(body, (Math.random() - 0.5) * 0.1);
+        });
+
+        window.addEventListener('resize', () => {
+            const w = window.innerWidth;
+            const h = window.innerHeight;
+            Matter.Body.setPosition(ground, { x: w / 2, y: h + wallThickness / 2 });
+            Matter.Body.setPosition(rightWall, { x: w + wallThickness / 2, y: h / 2 });
+        });
+    </script>
+</body>
+</html>

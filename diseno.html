@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diseño Interactivo | Eurolift</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Matter.js for Physics -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="design-page">
+
+    <!-- Header -->
+    <header id="principal">
+        <div class="container">
+            <a href="index.html" class="logo">
+                <img src="assets/img/logo.png" alt="Eurolift Logo">
+            </a>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Nosotros</a></li>
+                    <li><a href="servicios.html">Servicios</a></li>
+                    <li><a href="diseno.html" style="color: var(--primary-blue);">Diseño</a></li>
+                    <li><a href="portfolio.html">Portfolio</a></li>
+                    <li><a href="blog.html">Blog</a></li>
+                    <li><a href="contacto.html">Contacto</a></li>
+                </ul>
+            </nav>
+            <a href="https://api.whatsapp.com/send?phone=+584265708676&text=Hola%20%F0%9F%91%8B%20%C2%A1Eurolift!%20Deseo%20realizar%20una%20cotizacion" class="btn-cotizar" target="_blank">Cotizar</a>
+        </div>
+    </header>
+
+    <main id="design-experience">
+        <!-- Blueprint Background Layer -->
+        <div class="blueprint-layer">
+            <img src="assets/img/blueprints-bg.png" alt="Technical Blueprints">
+        </div>
+
+        <!-- Selection View -->
+        <section id="selection-view" class="active">
+            <div class="container">
+                <div class="selection-header">
+                    <span class="label">Configurador</span>
+                    <h1>Construye tu Ascensor</h1>
+                    <p>Selecciona un modelo para cargar sus componentes técnicos.</p>
+                </div>
+
+                <div class="model-grid">
+                    <div class="model-card" data-model="Electrico">
+                        <div class="model-icon"><img src="assets/img/Electrico.png" alt="Eléctrico"></div>
+                        <h3>Eléctrico</h3>
+                        <p>Eficiencia y suavidad moderna.</p>
+                    </div>
+                    <div class="model-card" data-model="Mecanico">
+                        <div class="model-icon"><img src="assets/img/Mecanico.png" alt="Mecánico"></div>
+                        <h3>Mecánico</h3>
+                        <p>Robustez clásica confiable.</p>
+                    </div>
+                    <div class="model-card" data-model="Industrial">
+                        <div class="model-icon"><img src="assets/img/Industrial.png" alt="Industrial"></div>
+                        <h3>Industrial</h3>
+                        <p>Capacidad de carga extrema.</p>
+                    </div>
+                    <div class="model-card" data-model="panoramico">
+                        <div class="model-icon"><img src="assets/img/panoramico.png" alt="Panorámico"></div>
+                        <h3>Panorámico</h3>
+                        <p>Vistas de lujo y diseño en cristal.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Simulation View -->
+        <section id="simulation-view">
+            <!-- Physics Container -->
+            <div id="physics-shaft" class="physics-shaft">
+                <!-- Matter.js will render here or we'll sync a DOM element -->
+                <div id="sim-cabin" class="sim-cabin-physics">
+                    <img id="cabin-skin" src="" alt="Elevator Skin">
+                    <div class="cabin-label-physics"><span id="current-model-name"></span></div>
+                </div>
+
+            </div>
+
+
+            <!-- Control Panel -->
+            <div id="side-panel" class="side-panel">
+                <div class="panel-header">CONTROL</div>
+                <div class="floor-btns">
+                    <button class="floor-btn" data-floor="3">03</button>
+                    <button class="floor-btn" data-floor="2">02</button>
+                    <button class="floor-btn active" data-floor="1">01</button>
+                    <button class="floor-btn" data-floor="0">PB</button>
+                </div>
+                <div class="panel-status">ESTADO: <span id="cabin-status">Nivel 01</span></div>
+            </div>
+
+            <!-- Reset Button -->
+            <button id="reset-btn" class="reset-btn">ELEGIR OTRO MODELO</button>
+        </section>
+    </main>
+
+    <!-- JS -->
+    <script src="js/main.js"></script>
+    <script src="js/diseno.js"></script>
+</body>
+</html>
